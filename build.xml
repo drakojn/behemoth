@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="foundation" default="check">
+    <fileset dir="./source" id="source">
+        <include name="**/*.php"/>
+    </fileset>
+    <target name="prepare">
+        <delete dir="./build" includeemptydirs="true"/>
+        <mkdir dir="./build"/>
+        <mkdir dir="./build/reports" mode="777"/>
+        <mkdir dir="./build/packages" mode="777"/>
+    </target>
+    <target name="lint">
+        <phplint
+                haltonfailure="true"
+                tofile="build/reports/lint"
+                deprecatedAsError="true">
+            <fileset refid="source"/>
+        </phplint>
+    </target>
+    <target name="loc">
+        <phploc
+                reportType="xml"
+                reportDirectory="build/reports">
+            <fileset refid="source"/>
+        </phploc>
+        <phploc
+                reportType="txt"
+                reportDirectory="build/reports">
+            <fileset refid="source"/>
+        </phploc>
+    </target>
+    <target name="cpd">
+        <phpcpd>
+            <formatter type="pmd" outfile="build/reports/pmd-cpd.xml"/>
+            <fileset refid="source"/>
+        </phpcpd>
+    </target>
+    <target name="cs">
+        <phpcodesniffer
+                standard="PSR2"
+                encoding="utf-8"
+                haltonerror="true">
+            <fileset refid="source"/>
+            <formatter type="full" usefile="false"/>
+            <formatter type="checkstyle" outfile="build/reports/checkstyle.xml"/>
+            <formatter type="xml" outfile="build/reports/checkstyle-xml.xml"/>
+            <formatter type="summary" outfile="build/reports/checkstyle.txt"/>
+        </phpcodesniffer>
+    </target>
+    <target name="calisthenics">
+        <phpcodesniffer
+                standard="${project.basedir}/vendor/object-calisthenics/phpcs-calisthenics-rules/src/ObjectCalisthenics/ruleset.xml"
+                encoding="utf-8"
+                haltonerror="true">
+            <fileset refid="source"/>
+            <formatter type="full" usefile="false"/>
+            <formatter type="summary" outfile="build/reports/checkstyle-calisthenics.txt"/>
+        </phpcodesniffer>
+    </target>
+    <target name="md">
+        <phpmd
+            rulesets="cleancode,codesize,controversial,design,naming,unusedcode">
+            <fileset refid="source"/>
+            <formatter type="xml" outfile="build/reports/pmd.xml"/>
+            <formatter type="text" outfile="build/reports/pmd.txt"/>
+            <formatter type="html" outfile="build/reports/pmd.html"/>
+        </phpmd>
+    </target>
+    <target name="pdepend">
+        <phpdepend>
+            <fileset refid="source"/>
+            <logger type="jdepend-chart" outfile="build/reports/pdepend-chart.svg"/>
+            <logger type="jdepend-xml" outfile="build/reports/pdepend.xml"/>
+            <logger type="overview-pyramid" outfile="build/reports/pdepend-pyramid.svg"/>
+            <logger type="summary-xml" outfile="build/reports/pdepend-summary.xml"/>
+            <analyzer type="coderank-mode" value="method"/>
+        </phpdepend>
+    </target>
+    <target name="package" depends="prepare">
+        <pharpackage
+            basedir="./"
+            destfile="./build/packages/project.phar"
+            compression="gzip">
+            <fileset dir=".">
+                <include name="application/**/*"/>
+                <include name="bin/run"/>
+                <include name="source/**/*.php"/>
+                <include name="vendor/**/*.php"/>
+                <include name="public/**/*"/>
+            </fileset>
+        </pharpackage>
+    </target>
+    <target name="unpackage">
+        <php expression="(new Phar('build/packages/project.phar'))->extractTo('../project-version-X-X-X');"/>
+    </target>
+    <target name="check" depends="prepare">
+        <phingcall target="lint"/>
+        <phingcall target="loc"/>
+        <phingcall target="pdepend"/>
+        <phingcall target="cpd"/>
+        <phingcall target="md"/>
+        <phingcall target="cs"/>
+        <phingcall target="calisthenics"/>
+    </target>
+</project>

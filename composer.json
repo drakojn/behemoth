@@ -1,0 +1,44 @@
+{
+  "name": "drakojn/behemoth",
+  "type": "library",
+  "description": "Foundation library for Web and CLI applications",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Anderson Casimiro",
+      "email": "duodraco@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Drakojn\\": "source/Drakojn"
+    }
+  },
+  "require": {
+    "php": "^7.0",
+    "cekurte/environment": "^0.3",
+    "symfony/cache": "^3.1",
+    "symfony/config": "^3.1",
+    "symfony/console": "^3.1",
+    "symfony/dependency-injection": "^3.1",
+    "symfony/http-kernel": "^3.1",
+    "symfony/process": "^3.1",
+    "symfony/proxy-manager-bridge": "^3.1",
+    "symfony/routing": "^3.1",
+    "symfony/yaml": "^3.1"
+  },
+  "require-dev": {
+    "phing/phing": "^2.15",
+    "sebastian/phpcpd": "^2.0",
+    "phpmd/phpmd": "^2.4",
+    "pdepend/pdepend": "^2.2",
+    "phploc/phploc": "^3.0",
+    "squizlabs/php_codesniffer": "^2.7",
+    "object-calisthenics/phpcs-calisthenics-rules": "dev-master"
+  },
+  "config": {
+    "bin-dir": "bin/"
+  }
+}
