@@ -93,6 +93,9 @@
     <target name="unpackage">
         <php expression="(new Phar('build/packages/project.phar'))->extractTo('../project-version-X-X-X');"/>
     </target>
+    <target name="phpunit">
+        <exec command="bin/phpunit" logoutput="true"/>
+    </target>
     <target name="check" depends="prepare">
         <phingcall target="lint"/>
         <phingcall target="loc"/>
@@ -101,5 +104,6 @@
         <phingcall target="md"/>
         <phingcall target="cs"/>
         <phingcall target="calisthenics"/>
+        <phingcall target="phpunit"/>
     </target>
 </project>

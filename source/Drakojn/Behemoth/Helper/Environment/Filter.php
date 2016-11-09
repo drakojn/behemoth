@@ -25,7 +25,7 @@ class Filter implements FilterInterface
 
     public function normalizeName(string $name):string
     {
-        return str_replace('_', '.', strtolower($name));
+        return (string) str_replace('_', '.', strtolower($name));
     }
 
     public function transformFromJson(string $value)

@@ -3,6 +3,7 @@ namespace Drakojn\Behemoth\Service\Application\Web\Request;
 
 use Drakojn\Behemoth\Service\Application\Web\Application;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -12,20 +13,16 @@ use Symfony\Component\Routing\Router;
 
 class Handler
 {
-    protected $dispatcher;
     protected $application;
 
     public function __construct(Application $application)
     {
         $this->application = $application;
-        $this->dispatcher = new EventDispatcher;
     }
 
-    public function handle(Request $request)
+    public function handle(Request $request):Response
     {
-        $event = new Event();
-        $event->setRequest($request);
-        $this->dispatcher->dispatch('request', $event);
+        (new EventDispatcher)->dispatch('request', new Event());
         $matcher = $this->buildMatcher($request);
         try {
             $attributes = $matcher->match($request->getPathInfo());
@@ -42,10 +39,10 @@ class Handler
         return $response;
     }
 
-    protected function buildMatcher(Request $request)
+    protected function buildMatcher(Request $request):Router
     {
         $context = (new RequestContext)->fromRequest($request);
-        $closure = [$this->application,'buildRouter'];
+        $closure = [$this->application,'getRouter'];
         return new Router(new ClosureLoader, $closure, [], $context);
     }
 }

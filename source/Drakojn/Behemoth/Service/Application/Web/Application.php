@@ -2,9 +2,9 @@
 declare(strict_types = 1);
 namespace Drakojn\Behemoth\Service\Application\Web;
 
-use Drakojn\Behemoth\Service\Application\ApplicationInterface;
 use Drakojn\Behemoth\Service\Application\Web\Request\Handler;
 use Drakojn\Behemoth\Service\Bootstrap;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 
-class Application implements HttpKernelInterface, ApplicationInterface
+class Application implements HttpKernelInterface
 {
     /** @var RouteCollection */
     protected $routes;
@@ -54,24 +54,29 @@ class Application implements HttpKernelInterface, ApplicationInterface
         return $command->execute($request, $attributes);
     }
 
-    public function buildRouter():RouteCollection
+    public function getRouter():RouteCollection
     {
         $cache = $this->bootstrap->getCache();
         $cachedRouter = $cache->getItem('router.routes');
         $router = $cachedRouter->get();
-        $container = $this->getBootstrap()->getContainer();
         if (!$cachedRouter->isHit()) {
-            $locator = $container->get('file.locator');
-            $routesLoader = new YamlFileLoader($locator);
-            $router = new RouteCollection();
-            $routePath = $this->bootstrap->getApplicationPath() . '/definition/routes/index.yaml';
-            $router->addCollection($routesLoader->load($routePath));
+            $router = $this->buildRouter();
             $cachedRouter->set($router);
             $cache->save($cachedRouter);
         }
         return $router;
     }
 
+    public function buildRouter():RouteCollection
+    {
+        $path = $this->bootstrap->getApplicationPath().'/definitions/';
+        $locator = new FileLocator($path);
+        $routesLoader = new YamlFileLoader($locator);
+        $router = new RouteCollection();
+        $routePath = $path. '/routes/index.yaml';
+        $router->addCollection($routesLoader->load($routePath));
+        return $router;
+    }
     public function __invoke():string
     {
         $request = Request::createFromGlobals();

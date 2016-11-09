@@ -4,8 +4,7 @@ namespace Drakojn\Behemoth\Service;
 
 use Cekurte\Environment\Environment;
 use Drakojn\Behemoth\Helper\Environment\Filter;
-use Drakojn\Behemoth\Service\Application\ApplicationInterface;
-use Drakojn\Behemoth\Service\Application\Web\Application as Web;
+use Drakojn\Behemoth\Service\Application\Web\Application;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -64,7 +63,7 @@ class Bootstrap
     {
         $environment = new Environment();
         $filter = new Filter($this->preffix);
-        $variables = $environment->getAll([$filter]);
+        $variables = $environment::getAll([$filter]);
         array_walk($variables, function (&$value, &$key) use ($filter) {
             $key = $filter->normalizeName($key);
             $value = $filter->transformFromJson($this->preffix);
@@ -93,8 +92,8 @@ class Bootstrap
         }
     }
 
-    public function getApplication(): ApplicationInterface
+    public function getApplication(): Application
     {
-        return new Web($this);
+        return new Application($this);
     }
 }
