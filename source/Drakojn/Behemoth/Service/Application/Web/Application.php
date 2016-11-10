@@ -36,7 +36,7 @@ class Application implements HttpKernelInterface
 
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true):Response
     {
-        if (!($type == self::MASTER_REQUEST && $catch == false)) {
+        if (!($type === self::MASTER_REQUEST && $catch === true)) {
             throw new \RuntimeException('Wrong Call');
         }
         $handler = new Handler($this);

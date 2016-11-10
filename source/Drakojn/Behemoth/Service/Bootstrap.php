@@ -83,15 +83,6 @@ class Bootstrap
         return false;
     }
 
-    protected function developmentSetup(Container $container)
-    {
-        if (!$container->getParameter('development')) {
-            ini_set('display_errors', 1);
-            ini_set('display_startup_errors', 1);
-            error_reporting(-1);
-        }
-    }
-
     public function getApplication(): Application
     {
         return new Application($this);

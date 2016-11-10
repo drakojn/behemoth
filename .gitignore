@@ -11,8 +11,6 @@ nbactions.xml
 *.bak
 *.kdev4
 .kdev4/
-Thumbs.db
-ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 *.cab
@@ -20,7 +18,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
-.idea
 *.iml
 out
 gen### SublimeText template
@@ -39,11 +36,9 @@ bh_unicode_properties.cache
 GitHub.sublime-settings
 composer.phar
 /vendor/
-.metadata
 bin/
 tmp/
 *.tmp
-*.swp
 *~.nib
 local.properties
 .settings/
