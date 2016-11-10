@@ -4,7 +4,7 @@
         backupGlobals="true"
         backupStaticAttributes="false"
         cacheTokens="false"
-        colors="true"
+        colors="false"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
@@ -21,7 +21,8 @@
         timeoutForSmallTests="1"
         timeoutForMediumTests="10"
         timeoutForLargeTests="60"
-        verbose="false">
+        verbose="false"
+        bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="Drakojn\Behemoth Test Suite">
             <directory suffix="Test.php">tests/Drakojn/Behemoth</directory>

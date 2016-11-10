@@ -21,8 +21,8 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        rmdir($this->applicationPath . '/definitions');
         $this->object = null;
+        rmdir($this->applicationPath . '/definitions');
     }
 
     public function testGetApplicationPath()
@@ -30,4 +30,9 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $path = $this->object->getApplicationPath();
         static::assertDirectoryExists($path);
     }
+
+    public function testGetCache()
+    {
+    }
+
 }
